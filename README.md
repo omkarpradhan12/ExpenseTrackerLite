@@ -1,7 +1,13 @@
 # First Run (Installation)
 
- - pip install -r requirements.txt
- - make sure directory path for CSV is correct
+- create conda environment
+- pip install -r requirements.txt
+- set conda env name in run.bat/run.sh
+- create shortcut of bat file
+- make sure directory path for CSV is correct (set in data_util.py)
+  - variable :- folder_path
+  - set csv folder path
 
 # Subsequent run
- - streamlit run UI.py
+
+- run using shortcut

@@ -3,7 +3,8 @@ import os
 from pathlib import Path
 
 
-paths = sorted(Path('../CSV').iterdir(), key=os.path.getmtime)
+folder_path = "../CSV"
+paths = sorted(Path(folder_path).iterdir(), key=os.path.getmtime)
 files = [os.path.basename(pth) for pth in paths]
 
 
