@@ -37,7 +37,7 @@ for i in range(len(tabs)-1):
         # st.dataframe(df, use_container_width=True)
         with cols[1]:
             st.subheader("Amount per Category")
-            fig = px.bar(cat_grp, x='Category', y='Amount')
+            fig = px.bar(cat_grp, x='Category', y='Amount',text_auto=True)
             fig.update_layout(showlegend=False)
             st.plotly_chart(fig)
 
@@ -46,7 +46,7 @@ for i in range(len(tabs)-1):
             st.plotly_chart(fig_donut)
 
         st.subheader("Amount per Day")
-        fig = px.bar(df, x='Date', y='Amount',color='Category')
+        fig = px.bar(df, x='Date', y='Amount',color='Category',text_auto=True)
         fig.update_layout(showlegend=True)
         st.plotly_chart(fig)
 
@@ -74,4 +74,8 @@ with tabs[len(tabs)-1]:
         fig_donut = px.pie(cat_grp, values='Amount', names='Category', hole=0.4)
         st.plotly_chart(fig_donut)
 
+    st.subheader("Amount per Day")
+    fig = px.bar(comb_df, x='Date', y='Amount',color='Category',text_auto=True)
+    fig.update_layout(showlegend=True)
+    st.plotly_chart(fig)
 
