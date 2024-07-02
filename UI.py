@@ -2,10 +2,17 @@ import streamlit as st
 from data_util import get_dfs
 import plotly.express as px
 import pandas as pd
+from streamlit_card import card
+import plotly.graph_objects as go
+
+st.set_page_config(
+    page_title="Expense Analysis",
+    layout="wide",
+)
 
 tab_labels, dfs = get_dfs()
 tab_labels.append("YTD")
-
+# tab_labels = list(set(tab_labels))
 tabs =  list(st.tabs(tab_labels))
 
 
@@ -28,12 +35,14 @@ for i in range(len(tabs)-1):
 
         st.header(tab_labels[i].replace('.csv',''))
         cat_grp = df[['Category','Amount']].groupby(by='Category').sum().reset_index()
-        cols = st.columns((2.5,1))
+        cols = st.columns((1,2.5))
         with cols[0]:
+
+            container = st.container(border=True)
+            container.header("TOTAL : :blue["+str(sum(df['Amount']))+"]")
+
             st.dataframe(cat_grp, use_container_width=True)
-            st.header("TOTAL : :blue["+str(sum(df['Amount']))+"]")
             st.dataframe(df, use_container_width=True)
-            st.header("TOTAL : :blue["+str(sum(df['Amount']))+"]")
         # st.dataframe(df, use_container_width=True)
         with cols[1]:
             st.subheader("Amount per Category")
@@ -61,7 +70,9 @@ with tabs[len(tabs)-1]:
     cols = st.columns((2.5,1))
     with cols[0]:
         st.dataframe(cat_grp, use_container_width=True)
-        st.header("TOTAL : :blue["+str(sum(comb_df['Amount']))+"]")
+        container = st.container(border=True)
+        container = st.container(border=True)
+        container.header("TOTAL : :blue["+str(sum(comb_df['Amount']))+"]")
         st.dataframe(comb_df, use_container_width=True)
     # st.dataframe(comb_df, use_container_width=True)
     with cols[1]:

@@ -11,8 +11,11 @@ files = [os.path.basename(pth) for pth in paths]
 def get_dfs():
     dfs = {}
     for f in files:
-        dfs[f] = pd.read_csv('../CSV/'+f)
-        dfs[f]['Category'] = dfs[f]['Category'].str.capitalize().str.strip()
+        try:
+            dfs[f] = pd.read_csv('../CSV/'+f)
+            dfs[f]['Category'] = dfs[f]['Category'].str.capitalize().str.strip()
+        except Exception:
+            print("Error reading file: " + f)
 
     return [files,dfs]
 
