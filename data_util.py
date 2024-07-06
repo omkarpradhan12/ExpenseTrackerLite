@@ -12,7 +12,7 @@ def get_dfs():
     dfs = {}
     for f in files:
         try:
-            dfs[f] = pd.read_csv(folder_path+f)
+            dfs[f] = pd.read_csv(folder_path+"/"+f)
             dfs[f]['Category'] = dfs[f]['Category'].str.capitalize().str.strip()
         except Exception:
             print("Error reading file: " + f)
