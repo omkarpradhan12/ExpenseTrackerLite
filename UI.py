@@ -4,13 +4,33 @@ import plotly.express as px
 import pandas as pd
 from streamlit_card import card
 import plotly.graph_objects as go
+import tkinter as tk
+from tkinter import filedialog
 
 st.set_page_config(
     page_title="Expense Analysis",
     layout="wide",
 )
 
-tab_labels, dfs = get_dfs()
+
+def select_folder():
+  """Opens a folder selection dialog and prints the chosen folder path."""
+
+  root = tk.Tk()
+  root.withdraw()
+
+  folder_path = filedialog.askdirectory()
+
+  if folder_path:
+    return folder_path
+  else:
+    return "../CSV"
+
+
+
+folder_path = select_folder()
+
+tab_labels, dfs = get_dfs(folder_path=folder_path)
 tab_labels.append("YTD")
 # tab_labels = list(set(tab_labels))
 tabs =  list(st.tabs(tab_labels))

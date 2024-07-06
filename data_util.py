@@ -3,12 +3,15 @@ import os
 from pathlib import Path
 
 
-folder_path = "../CSV"
-paths = sorted(Path(folder_path).iterdir(), key=os.path.getmtime)
-files = [os.path.basename(pth) for pth in paths]
 
 
-def get_dfs():
+
+# folder_path = "../CSV"
+
+
+def get_dfs(folder_path):
+    paths = sorted(Path(folder_path).iterdir(), key=os.path.getmtime)
+    files = [os.path.basename(pth) for pth in paths]
     dfs = {}
     for f in files:
         try:
