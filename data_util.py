@@ -22,3 +22,16 @@ def get_dfs(folder_path):
 
     return [files,dfs]
 
+
+def get_ytd_df(dfs):
+    months = []
+    totals = []
+    for month in dfs:
+        months.append(month.split('.')[0])
+        totals.append(sum(dfs[month]['Amount']))
+
+    month_wise = pd.DataFrame({
+        "Month":months,
+        "Total":totals
+    })
+    return month_wise
