@@ -6,6 +6,8 @@ from streamlit_card import card
 import plotly.graph_objects as go
 import tkinter as tk
 from tkinter import filedialog
+import os
+import dotenv
 
 st.set_page_config(
     page_title="Expense Analysis",
@@ -27,8 +29,22 @@ def select_folder():
     return "../CSV"
 
 
+if os.path.isfile('.env')==False:
+    f = open('.env','w+')
+    f.write("dev='op'")
+    f.close()
 
-folder_path = select_folder()
+if os.path.isfile('.env'):
+    dotenv_file = dotenv.find_dotenv()
+    dotenv.load_dotenv(dotenv_file)
+    if 'CSV-FOLDER' in os.environ:
+        folder_path = os.getenv('CSV-FOLDER')
+    else:
+        folder_path = select_folder()
+        # os.environ['CSV-FOLDER'] = folder_path
+        dotenv.set_key(dotenv_file,key_to_set='CSV-FOLDER',value_to_set=folder_path)
+
+# folder_path = select_folder()
 
 tab_labels, dfs = get_dfs(folder_path=folder_path)
 tab_labels.append("YTD")
@@ -46,6 +62,10 @@ tabs =  list(st.tabs(tab_labels))
 #     '#FFA500',  # Orange
 #     '#FF0000'   # Red
 #     ]
+
+st.header(f'Folder Path : {folder_path}')
+if st.button(label='Change Folder'):
+    folder_path = select_folder()
 
 
 
