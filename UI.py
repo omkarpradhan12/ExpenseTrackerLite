@@ -7,7 +7,8 @@ import plotly.graph_objects as go
 import tkinter as tk
 from tkinter import filedialog
 import os
-import dotenv
+# import dotenv
+import json
 
 st.set_page_config(
     page_title="Expense Analysis",
@@ -19,30 +20,50 @@ def select_folder():
   """Opens a folder selection dialog and prints the chosen folder path."""
 
   root = tk.Tk()
-  root.withdraw()
+#   root.withdraw()
 
   folder_path = filedialog.askdirectory()
 
+  root.destroy()
   if folder_path:
     return folder_path
   else:
     return "../CSV"
 
 
-if os.path.isfile('.env')==False:
-    f = open('.env','w+')
-    f.write("dev='op'")
-    f.close()
+# if os.path.isfile('.env')==False:
+#     f = open('.env','w+')
+#     f.write("dev='op'")
+#     f.close()
 
-if os.path.isfile('.env'):
-    dotenv_file = dotenv.find_dotenv()
-    dotenv.load_dotenv(dotenv_file)
-    if 'CSV-FOLDER' in os.environ:
-        folder_path = os.getenv('CSV-FOLDER')
-    else:
-        folder_path = select_folder()
-        # os.environ['CSV-FOLDER'] = folder_path
-        dotenv.set_key(dotenv_file,key_to_set='CSV-FOLDER',value_to_set=folder_path)
+# if os.path.isfile('.env'):
+#     dotenv_file = dotenv.find_dotenv()
+#     dotenv.load_dotenv(dotenv_file)
+#     if 'CSV-FOLDER' in os.environ:
+#         folder_path = os.getenv('CSV-FOLDER')
+#     else:
+#         folder_path = select_folder()
+#         # os.environ['CSV-FOLDER'] = folder_path
+#         dotenv.set_key(dotenv_file,key_to_set='CSV-FOLDER',value_to_set=folder_path)
+
+
+
+if os.path.isfile('env.json')==False:
+    f = open('env.json','w+')
+    f.write('[{"dev": "op"}]')
+
+if os.path.isfile('env.json'):
+    with open('env.json') as json_file:
+        env_variables = json.load(json_file)
+        if 'CSV-FOLDER' in env_variables:
+            folder_path = env_variables['CSV-FOLDER']
+        else:
+            env_variables = {}
+            folder_path = select_folder()
+            env_variables['dev'] = "op"
+            env_variables['CSV-FOLDER'] = folder_path
+            with open('env.json', 'w') as json_file2:
+                json.dump(env_variables, json_file2)
 
 # folder_path = select_folder()
 
@@ -63,9 +84,19 @@ tabs =  list(st.tabs(tab_labels))
 #     '#FF0000'   # Red
 #     ]
 
-st.header(f'Folder Path : {folder_path}')
+
 if st.button(label='Change Folder'):
     folder_path = select_folder()
+    env_variables = {}
+    env_variables['dev'] = "op"
+    env_variables['CSV-FOLDER'] = folder_path
+    with open('env.json', 'w') as json_file2:
+        json.dump(env_variables, json_file2)
+    # print(folder_path)
+    # dotenv.set_key(dotenv_file,key_to_set='CSV-FOLDER',value_to_set=folder_path)
+    # print(os.getenv('CSV-FOLDER'))
+    st.toast('Please Reload')
+
 
 
 
