@@ -1,30 +1,52 @@
 import streamlit as st
-from data_util import get_dfs
-import plotly.express as px
 import pandas as pd
-from streamlit_elements import elements, mui, html
-from streamlit_elements import dashboard
-from streamlit_elements import nivo
-tab_labels, dfs = get_dfs()
-# tab_labels.append("YTD")
+import json
+import os
 
-tab = st.sidebar.radio("Select a File", tab_labels)
-
-f_name = tab.replace('.csv','')
-
-df = dfs[tab]
-cat_grp = df[['Category','Amount']].groupby(by='Category').sum().reset_index()
+if "df_result" not in st.session_state:
+    st.session_state['df_result'] = pd.DataFrame(columns=['date','reason','category','price'])
 
 
-with elements("new_element"):
-    layout = [
-        # Parameters: element_identifier, x_pos, y_pos, width, height, [item properties...]
-        dashboard.Item("first_item", 0, 0, 2, 2),
-        dashboard.Item("second_item", 2, 0, 2, 2),
-        dashboard.Item("third_item", 0, 2, 1, 1),
-    ]
-
-    # Next, create a dashboard layout using the 'with' syntax. It takes the layout
-    # as first parameter, plus additional properties you can find in the GitHub links below.
+if os.path.isfile('data.json')==False:
+    data = {"date": [],"reason":[],"category":[],"price":[]}
+    with open('data.json','w+') as f:
+        json.dump(data, f)
+    st.session_state['df_result'] = pd.DataFrame(data)
 
 
+if os.path.isfile('data.json')==True:
+    with open('data.json') as json_file:
+        print("loaded")
+        data = json.load(json_file)
+        st.session_state['df_result'] = pd.DataFrame(data)
+
+
+
+st.write("Inside the form")
+
+date = st.date_input("Select date")
+reason = st.text_input("Enter Reason")
+category = st.selectbox("Select Category",("Food", "Drink", "Flat","Other"))
+price = st.number_input("Enter Price")
+
+
+
+
+if st.button('Add Expense'):
+
+    # print("date", date, "reason", reason, "category", category, "price", price)
+    # # pd.concat(dataframe,pd.DataFrame())
+    st.session_state['df_result'].loc[len(st.session_state['df_result'])] = {"date":str(date),"reason":str(reason),"category":str(category),"price":str(price)}
+    new_df = st.session_state['df_result']
+    new_df.to_json('data.json')
+
+
+if st.button('CLEAR !!'):
+    data = {"date": [],"reason":[],"category":[],"price":[]}
+    with open('data.json','w+') as f:
+        json.dump(data, f)
+    st.session_state['df_result'] = pd.DataFrame(data)
+
+
+
+st.dataframe(st.session_state['df_result'])
